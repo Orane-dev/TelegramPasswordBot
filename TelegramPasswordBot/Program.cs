@@ -10,9 +10,6 @@ namespace TelegramPasswordBot
     {
         static async Task Main(string[] args)
         {
-            Environment.SetEnvironmentVariable("BOT_TOKEN", "7119097284:AAFnWy8rK5a31jncZOhQCw8i69voJpAObqo");
-            Environment.SetEnvironmentVariable("DEBUG", "localhost:7198");
-            Environment.SetEnvironmentVariable("RELEASE", "passwordapimanager:443");
             var services = new ServiceCollection();
             ConfigureServices(services);
 
