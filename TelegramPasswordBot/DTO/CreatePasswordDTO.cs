@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace TelegramPasswordBot.DTO
 {
-    internal class PasswordDTO
+    internal class CreatePasswordDTO
     {
-        public int id {  get; set; }
+        public int id { get; set; }
         public string telegramUserId { get; set; }
-        public int serviceId { get; set; }
+        public string serviceName { get; set; }
         public string login { get; set; }
         public string decryptedPassword { get; set; }
         public DateTime createTime { get; set; }

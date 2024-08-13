@@ -1,6 +1,8 @@
-﻿using Telegram.Bot;
-using Telegram.Bot.Polling;
-using Telegram.Bot.Types.Enums;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Telegram.Bot;
+using TelegramPasswordBot.Interfaces;
+using TelegramPasswordBot.Handlers;
+using TelegramPasswordBot.Utils;
 
 namespace TelegramPasswordBot
 {
@@ -8,18 +10,26 @@ namespace TelegramPasswordBot
     {
         static async Task Main(string[] args)
         {
-            PasswordBot bot = new PasswordBot(new TelegramBotClient("7126133309:AAFChXgWwFJ7tdTeGqkNASlkXgbWblJlMFw"), new ReceiverOptions
-            {
-                AllowedUpdates = new[]
-                {
-                    UpdateType.Message,
-                    UpdateType.InlineQuery,
-                    UpdateType.CallbackQuery,
-                },
-                ThrowPendingUpdates = true
-            });
+            Environment.SetEnvironmentVariable("BOT_TOKEN", "7119097284:AAFnWy8rK5a31jncZOhQCw8i69voJpAObqo");
+            Environment.SetEnvironmentVariable("DEBUG", "localhost:7198");
+            Environment.SetEnvironmentVariable("RELEASE", "passwordapimanager:443");
+            var services = new ServiceCollection();
+            ConfigureServices(services);
 
-            await bot.Start();
+            var serviceProvider = services.BuildServiceProvider();
+
+            var botService = serviceProvider.GetRequiredService<IPasswordBot>();
+            await botService.Start();
+        }
+
+        private static void ConfigureServices(IServiceCollection services)
+        {
+            services.AddHttpClient();
+            services.AddSingleton<IPasswordBot, PasswordBot>();
+            services.AddTransient<BotMessageHandlers>();
+            services.AddTransient<BotCallbackQueryHandlers>();
+            services.AddSingleton<ITelegramBotUtils, TelegramBotUtils>();
+            services.AddSingleton<ITelegramBotClient>(provider => new TelegramBotClient(Environment.GetEnvironmentVariable("BOT_TOKEN")));
         }
     }
 }
